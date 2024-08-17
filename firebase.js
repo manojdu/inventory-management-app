@@ -1,14 +1,16 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import {getAuth, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
+
+// Your web app's Firebase configuration from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyDwrXCwR22JEL2zZPtDZ65lqPjrMQ2vggc",
-  authDomain: "inventory-management-app-b171d.firebaseapp.com",
-  projectId: "inventory-management-app-b171d",
-  storageBucket: "inventory-management-app-b171d.appspot.com",
-  messagingSenderId: "724380199691",
-  appId: "1:724380199691:web:36d808a7bcfa2e98a1900e"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
@@ -16,4 +18,5 @@ const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
-export { firestore ,auth, googleProvider};
+
+export { firestore, auth, googleProvider };
