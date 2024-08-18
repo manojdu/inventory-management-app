@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import {
-  Box, Stack, Typography, Button, Modal, TextField, Select, MenuItem, Card, CardContent, CardActions, InputLabel, FormControl, Tooltip, Snackbar, Alert
+  Box, Grid, Typography, Button, Modal, TextField, Select, MenuItem, Card, CardContent, CardActions, InputLabel, FormControl, Tooltip, Snackbar, Alert
 } from '@mui/material'
 import { firestore } from '@/firebase'
 import {
@@ -17,7 +17,8 @@ const modalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: '90%',
+  maxWidth: 500,
   bgcolor: '#ffffff',
   borderRadius: '15px',
   boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.3)',
@@ -290,73 +291,81 @@ export default function Home() {
               <Typography id="modal-modal-title" variant="h6" component="h2">
                 Add Item
               </Typography>
-              <Stack width="100%" direction={'row'} spacing={2}>
-                <TextField
-                  id="outlined-basic"
-                  label="Item"
-                  variant="outlined"
-                  fullWidth
-                  value={itemName}
-                  onChange={(e) => setItemName(e.target.value)}
-                />
-                <TextField
-                  id="outlined-quantity"
-                  label="Quantity"
-                  variant="outlined"
-                  type="number"
-                  fullWidth
-                  value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
-                />
-                <FormControl fullWidth>
-                  <InputLabel id="category-label" style={{ color: '#1976d2' }}>Category</InputLabel>
-                  <Select
-                    labelId="category-label"
-                    id="category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    style={{ color: '#1976d2' }}
+              <Grid container spacing={2} width="100%">
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Item"
+                    variant="outlined"
+                    fullWidth
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    id="outlined-quantity"
+                    label="Quantity"
+                    variant="outlined"
+                    type="number"
+                    fullWidth
+                    value={quantity}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel id="category-label" style={{ color: '#1976d2' }}>Category</InputLabel>
+                    <Select
+                      labelId="category-label"
+                      id="category"
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      style={{ color: '#1976d2' }}
+                    >
+                      {categories.map((cat) => (
+                        <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      addItem(itemName, quantity, category)
+                      setItemName('')
+                      setQuantity(1)
+                      setCategory('')
+                      handleClose()
+                    }}
                   >
-                    {categories.map((cat) => (
-                      <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    addItem(itemName, quantity, category)
-                    setItemName('')
-                    setQuantity(1)
-                    setCategory('')
-                    handleClose()
-                  }}
-                >
-                  Add
-                </Button>
-              </Stack>
-              <Stack width="100%" direction={'row'} spacing={2} marginTop={2}>
-                <TextField
-                  id="new-category"
-                  label="New Category"
-                  variant="outlined"
-                  fullWidth
-                  value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
-                  InputLabelProps={{
-                    style: { color: '#1976d2' },
-                  }}
-                  InputProps={{
-                    style: { color: '#1976d2' },
-                  }}
-                />
-                <Button variant="contained" onClick={addNewCategory}>
-                  Add Category
-                </Button>
-              </Stack>
+                    Add
+                  </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="new-category"
+                    label="New Category"
+                    variant="outlined"
+                    fullWidth
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    InputLabelProps={{
+                      style: { color: '#1976d2' },
+                    }}
+                    InputProps={{
+                      style: { color: '#1976d2' },
+                    }}
+                  />
+                  <Button variant="contained" onClick={addNewCategory} style={{ marginTop: '10px' }}>
+                    Add Category
+                  </Button>
+                </Grid>
+              </Grid>
             </Box>
           </Modal>
-          <Box border={'1px solid #333'} width="800px" padding={2} bgcolor={'#ffffff'} borderRadius={2} boxShadow={3}>
+          <Box border={'1px solid #333'} width="100%" maxWidth="800px" padding={2} bgcolor={'#ffffff'} borderRadius={2} boxShadow={3}>
             <Box
               width="100%"
               height="100px"
@@ -370,57 +379,65 @@ export default function Home() {
               </Typography>
             </Box>
             <Box display={'flex'} flexWrap={'wrap'} gap={2} marginTop={2}>
-              <Stack direction="row" spacing={2} marginBottom={2} width="100%">
-                <TextField
-                  id="search-query"
-                  label="Search"
-                  variant="outlined"
-                  fullWidth
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <FormControl fullWidth>
-                  <InputLabel id="filter-category-label">Filter by Category</InputLabel>
-                  <Select
-                    labelId="filter-category-label"
-                    id="filter-category"
-                    value={filterCategory}
-                    onChange={(e) => setFilterCategory(e.target.value)}
-                  >
-                    <MenuItem value="">All</MenuItem>
-                    {categories.map((cat) => (
-                      <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Stack>
-              {filteredInventory.map(({ name, quantity, category }) => (
-                <Card key={name} variant="outlined" sx={{ width: '30%' }}>
-                  <CardContent>
-                    <Typography variant={'h6'} color={'#333'} textAlign={'center'}>
-                      {name.charAt(0).toUpperCase() + name.slice(1)}
-                    </Typography>
-                    <Typography variant={'body1'} color={'#333'} textAlign={'center'}>
-                      Quantity: {quantity}
-                    </Typography>
-                    <Typography variant={'body1'} color={'#333'} textAlign={'center'}>
-                      Category: {category}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Tooltip title="Remove item">
-                      <Button variant="contained" color="secondary" onClick={() => removeItem(name)}>
-                        Remove
-                      </Button>
-                    </Tooltip>
-                    <Tooltip title="Edit item">
-                      <Button variant="contained" color="primary" onClick={() => handleEditOpen({ name, quantity, category })}>
-                        Edit
-                      </Button>
-                    </Tooltip>
-                  </CardActions>
-                </Card>
-              ))}
+              <Grid container spacing={2} marginBottom={2} width="100%">
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    id="search-query"
+                    label="Search"
+                    variant="outlined"
+                    fullWidth
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id="filter-category-label">Filter by Category</InputLabel>
+                    <Select
+                      labelId="filter-category-label"
+                      id="filter-category"
+                      value={filterCategory}
+                      onChange={(e) => setFilterCategory(e.target.value)}
+                    >
+                      <MenuItem value="">All</MenuItem>
+                      {categories.map((cat) => (
+                        <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2}>
+                {filteredInventory.map(({ name, quantity, category }) => (
+                  <Grid item xs={12} sm={6} md={4} key={name}>
+                    <Card variant="outlined">
+                      <CardContent>
+                        <Typography variant={'h6'} color={'#333'} textAlign={'center'}>
+                          {name.charAt(0).toUpperCase() + name.slice(1)}
+                        </Typography>
+                        <Typography variant={'body1'} color={'#333'} textAlign={'center'}>
+                          Quantity: {quantity}
+                        </Typography>
+                        <Typography variant={'body1'} color={'#333'} textAlign={'center'}>
+                          Category: {category}
+                        </Typography>
+                      </CardContent>
+                      <CardActions>
+                        <Tooltip title="Remove item">
+                          <Button variant="contained" color="secondary" onClick={() => removeItem(name)}>
+                            Remove
+                          </Button>
+                        </Tooltip>
+                        <Tooltip title="Edit item">
+                          <Button variant="contained" color="primary" onClick={() => handleEditOpen({ name, quantity, category })}>
+                            Edit
+                          </Button>
+                        </Tooltip>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
             </Box>
             <Box display="flex" justifyContent="space-between" marginTop={2}>
               <Button variant="contained" onClick={handlePreviousPage} disabled={currentPage === 1}>
@@ -446,45 +463,53 @@ export default function Home() {
             Edit Item
           </Typography>
           {editItem && (
-            <Stack width="100%" direction={'row'} spacing={2}>
-              <TextField
-                id="edit-item-name"
-                label="Item"
-                variant="outlined"
-                fullWidth
-                value={editItem.name}
-                disabled
-              />
-              <TextField
-                id="edit-item-quantity"
-                label="Quantity"
-                variant="outlined"
-                type="number"
-                fullWidth
-                value={editItem.quantity}
-                onChange={(e) => setEditItem({ ...editItem, quantity: Number(e.target.value) })}
-              />
-              <FormControl fullWidth>
-                <InputLabel id="edit-category-label" style={{ color: '#1976d2' }}>Category</InputLabel>
-                <Select
-                  labelId="edit-category-label"
-                  id="edit-category"
-                  value={editItem.category}
-                  onChange={(e) => setEditItem({ ...editItem, category: e.target.value })}
-                  style={{ color: '#1976d2' }}
+            <Grid container spacing={2} width="100%">
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  id="edit-item-name"
+                  label="Item"
+                  variant="outlined"
+                  fullWidth
+                  value={editItem.name}
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  id="edit-item-quantity"
+                  label="Quantity"
+                  variant="outlined"
+                  type="number"
+                  fullWidth
+                  value={editItem.quantity}
+                  onChange={(e) => setEditItem({ ...editItem, quantity: Number(e.target.value) })}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel id="edit-category-label" style={{ color: '#1976d2' }}>Category</InputLabel>
+                  <Select
+                    labelId="edit-category-label"
+                    id="edit-category"
+                    value={editItem.category}
+                    onChange={(e) => setEditItem({ ...editItem, category: e.target.value })}
+                    style={{ color: '#1976d2' }}
+                  >
+                    {categories.map((cat) => (
+                      <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="outlined"
+                  onClick={handleEditSave}
                 >
-                  {categories.map((cat) => (
-                    <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <Button
-                variant="outlined"
-                onClick={handleEditSave}
-              >
-                Save
-              </Button>
-            </Stack>
+                  Save
+                </Button>
+              </Grid>
+            </Grid>
           )}
         </Box>
       </Modal>
