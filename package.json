@@ -19,7 +19,8 @@
     "json2csv": "^6.0.0-alpha.2",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
-    "next": "14.2.5"
+    "next": "14.2.5",
+    "react-infinite-scroll-component": "^6.1.0"
   },
   "devDependencies": {
     "eslint": "^8",

@@ -11,7 +11,7 @@ import {
 import AuthModal from './AuthModal'
 import Dashboard from './Dashboard'
 import jsPDF from 'jspdf'
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from '@vercel/analytics/react';
 
 const modalStyle = {
   position: 'absolute',
@@ -519,6 +519,7 @@ export default function Home() {
           {errorMessage}
         </Alert>
       </Snackbar>
+      <Analytics />
     </Box>
   )
 }
