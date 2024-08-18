@@ -11,6 +11,7 @@ import {
 import AuthModal from './AuthModal'
 import Dashboard from './Dashboard'
 import jsPDF from 'jspdf'
+import { Analytics } from "@vercel/analytics/react"
 
 const modalStyle = {
   position: 'absolute',
